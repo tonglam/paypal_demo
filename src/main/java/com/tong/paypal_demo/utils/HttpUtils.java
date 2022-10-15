@@ -49,7 +49,7 @@ public class HttpUtils {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString(StringUtils.joinWith(":", Constant.CLIENT_ID, Constant.CLIENT_SECRET).getBytes()));
         try (CloseableHttpResponse response = httpclient.execute(httpGet)) {
-            if (response.getStatusLine().getStatusCode() == 200) {
+            if (String.valueOf(response.getStatusLine().getStatusCode()).startsWith("20")) {
                 String result = EntityUtils.toString(response.getEntity(), "UTF-8");
                 return Optional.of(result);
             }
@@ -93,7 +93,7 @@ public class HttpUtils {
         UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(parameters);
         httpPost.setEntity(formEntity);
         try (CloseableHttpResponse response = httpclient.execute(httpPost, httpClientContext)) {
-            if (response.getStatusLine().getStatusCode() == 200) {
+            if (String.valueOf(response.getStatusLine().getStatusCode()).startsWith("20")) {
                 String result = EntityUtils.toString(response.getEntity(), "UTF-8");
                 return Optional.of(result);
             }

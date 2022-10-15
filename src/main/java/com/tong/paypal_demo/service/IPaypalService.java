@@ -21,4 +21,10 @@ public interface IPaypalService {
 
     RefundCapturedPaymentOutVo refundDetails(String refundId);
 
+    WebhookCreateOutVo createWebhook(WebhookCreateInVo webhookCreateInVo);
+
+    void deleteWebhook(String webhookId);
+
+    String verifyWebhookSignature(WebhookVerifyInVo verifyInVo);
+
 }

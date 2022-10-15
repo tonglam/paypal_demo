@@ -21,5 +21,8 @@ public class Constant {
     public static final String SHOW_CAPTURED_PAYMENT_DETAILS = BASE_URL + "/v2/payments/captures/%s";
     public static final String REFUND_CAPTURED_PAYMENT = BASE_URL + "/v2/payments/captures/%s/refund";
     public static final String SHOW_REFUND_DETAILS = BASE_URL + "/v2/payments/refunds/%s";
+    public static final String CREATE_WEBHOOK = BASE_URL + "/v1/notifications/webhooks";
+    public static final String DELETE_WEBHOOK = BASE_URL + "/v1/notifications/webhooks/%s";
+    public static final String VERIFY_WEBHOOK_SIGNATURE = BASE_URL + "/v1/notifications/verify-webhook-signature";
 
 }

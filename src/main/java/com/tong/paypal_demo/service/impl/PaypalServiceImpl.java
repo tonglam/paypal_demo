@@ -98,10 +98,10 @@ public class PaypalServiceImpl implements IPaypalService {
     @Override
     public RefundCapturedPaymentOutVo refundCapturedPayment(RefundCapturedPaymentsInVo refundCapturedPaymentsInVo) {
         try {
-            RefundCapturedPaymentsBodyVo bodyVo = new RefundCapturedPaymentsBodyVo()
+            RefundCapturedPaymentsBodyVo body = new RefundCapturedPaymentsBodyVo()
                     .setAmount(refundCapturedPaymentsInVo.getAmount())
                     .setNoteToPayer(refundCapturedPaymentsInVo.getReason());
-            String result = HttpUtils.httpPost(String.format(Constant.REFUND_CAPTURED_PAYMENT, refundCapturedPaymentsInVo.getCaptureId()), JsonUtils.obj2json(bodyVo)).orElse("");
+            String result = HttpUtils.httpPost(String.format(Constant.REFUND_CAPTURED_PAYMENT, refundCapturedPaymentsInVo.getCaptureId()), JsonUtils.obj2json(body)).orElse("");
             if (StringUtils.isBlank(result)) {
                 return null;
             }
@@ -120,6 +120,54 @@ public class PaypalServiceImpl implements IPaypalService {
                 return null;
             }
             return JsonUtils.json2obj(result, RefundCapturedPaymentOutVo.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public WebhookCreateOutVo createWebhook(WebhookCreateInVo webhookCreateInVo) {
+        try {
+            WebhookCreateInVo body = new WebhookCreateInVo()
+                    .setUrl(webhookCreateInVo.getUrl())
+                    .setEventTypes(webhookCreateInVo.getEventTypes());
+            String result = HttpUtils.httpPost(Constant.CREATE_WEBHOOK, JsonUtils.obj2json(body)).orElse("");
+            if (StringUtils.isBlank(result)) {
+                return null;
+            }
+            return JsonUtils.json2obj(result, WebhookCreateOutVo.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteWebhook(String webhookId) {
+        try {
+            HttpUtils.httpGet(String.format(Constant.DELETE_WEBHOOK, webhookId));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String verifyWebhookSignature(WebhookVerifyInVo verifyInVo) {
+        try {
+            WebhookVerifyInVo body = new WebhookVerifyInVo()
+                    .setWebhookId(verifyInVo.getWebhookId())
+                    .setTransmissionId(verifyInVo.getTransmissionId())
+                    .setTransmissionTime(verifyInVo.getTransmissionTime())
+                    .setCertUrl(verifyInVo.getCertUrl())
+                    .setAuthAlgo(verifyInVo.getAuthAlgo())
+                    .setTransmissionSig(verifyInVo.getTransmissionSig())
+                    .setWebhookEvent(verifyInVo.getWebhookEvent());
+            String result = HttpUtils.httpPost(Constant.VERIFY_WEBHOOK_SIGNATURE, JsonUtils.obj2json(body)).orElse("");
+            if (StringUtils.isBlank(result)) {
+                return null;
+            }
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
         }
